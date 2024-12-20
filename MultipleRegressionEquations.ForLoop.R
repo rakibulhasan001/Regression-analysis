@@ -1,4 +1,4 @@
-df1 <- read.csv("db_test.csv", header = TRUE, sep = ",")  #reading the csv file from the working directory. It is set through Ctrl+Shift+H
+df1 <- read.csv("RelatedMultipleRegData.csv", header = TRUE, sep = ",")  #reading the csv file from the working directory. It is set through Ctrl+Shift+H
 df1
 
 #log transformation of qi and bound with original data file
@@ -22,6 +22,7 @@ df1
 #Using for loop to fit the data for all the linear models
 install.packages('olsrr') #install the package that runs residual plots and check assumptions
 library(olsrr)    #Load the package
+
 for (i in 1:4) {                                                      
    model <- lm(df1[,5+i] ~ ln_q1 + ln_q2 + ln_q3 + ln_q4 + ln_Q, data = df1)           #df1[,5+i] iterates through wi
    # Print the summary of the model
