@@ -1,4 +1,4 @@
-# Regression-analysis
+# Related Multiple Regression Equations
 
 w1 = a1 + {γ_11*ln(q1) + γ_12*ln(q2) + γ_13*ln(q3) + γ_14*ln(q4)} + β_1* {w1*ln(q1) + w2*ln(q2) + w3*ln(q3) + w4*ln(q4)}        ------- (1)
 
