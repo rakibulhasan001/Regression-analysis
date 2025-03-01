@@ -1,0 +1,50 @@
+#A comprehensive R code for Partial Least Square Regression PLS-Reg
+dt = read.csv(dataset)
+
+........................
+# Normalize (Standardize) the dataset (mean = 0, variance = 1)
+dts <- scale(dt)
+..............
+
+library(pls)
+pls.model = plsr(pref ~ ., data = dts, validation = "CV")    #CV do 10-fold cross-validation by default | 'arg' should be one of “none”, “CV”, “LOO”
+pls.model = plsr(pref ~ ., data = dts, validation = "LOO")    #LOO do leave one out cross-validation
+
+# Find the number of dimensions with lowest cross validation error
+cv = RMSEP(pls.model)         #RMSEP (Root Mean Square Error of Prediction)
+
+best.dims = which.min(cv$val[estimate = "adjCV", , ]) - 1
+
+# Rerun the model
+pls.model = plsr(pref ~ ., data = dts, ncomp = best.dims)
+summary(pls.model)
+.........................................
+#CDF Cumulative plotting
+coefficients = coef(pls.model)
+sum.coef = sum(sapply(coefficients, abs))
+coefficients = coefficients * 100 / sum.coef
+coefficients = sort(coefficients[, 1 , 1])
+barplot(tail(coefficients, 5))
+coe = sapply(coefficients, abs)      #absolutization of all values
+sorted_coeDec <- sort(coe, decreasing = TRUE)       #sorting in decreasing order
+# Creating a data frame
+df <- data.frame(Index = 1:length(sorted_coeDec), CumulativeSum = cumsum(sorted_coeDec))
+
+#Cumulative sum interactive Plotting
+library(plotly)
+# Creating a plotly object
+p <- plot_ly(x = df$Index, y = df$CumulativeSum, type = 'scatter', mode = 'lines+markers',
+             marker = list(color = 'red'), line = list(color = 'blue'))
+p <- layout(p, title = "Interactive Cumulative Sum Plot",
+            xaxis = list(title = "Index"), yaxis = list(title = "Cumulative Sum"))
+
+......
+#Confidence Interval for coefficients
+library(car)
+fit_b <- Boot(pls.model, R = 1000)
+summary(fit_b)
+confint(fit_b, level = 0.95)
+?Boot
+??BCa
+?PERC
+??perc
