@@ -1,6 +1,6 @@
-#A comprehensive R code for Partial Least Square Regression PLS-Reg
-dt = read.csv(dataset)
+## A comprehensive R code for Partial Least Square Regression PLS-Reg
 
+dt = read.csv(dataset)
 ........................
 # Normalize (Standardize) the dataset (mean = 0, variance = 1)
 dts <- scale(dt)
@@ -19,7 +19,8 @@ best.dims = which.min(cv$val[estimate = "adjCV", , ]) - 1
 pls.model = plsr(pref ~ ., data = dts, ncomp = best.dims)
 summary(pls.model)
 .........................................
-#CDF Cumulative plotting
+#CDF Cumulative plotting to find significant variables
+
 coefficients = coef(pls.model)
 sum.coef = sum(sapply(coefficients, abs))
 coefficients = coefficients * 100 / sum.coef
@@ -39,12 +40,9 @@ p <- layout(p, title = "Interactive Cumulative Sum Plot",
             xaxis = list(title = "Index"), yaxis = list(title = "Cumulative Sum"))
 
 ......
-#Confidence Interval for coefficients
+
+#Confidence Interval for coefficients to find significant variables
 library(car)
 fit_b <- Boot(pls.model, R = 1000)
 summary(fit_b)
 confint(fit_b, level = 0.95)
-?Boot
-??BCa
-?PERC
-??perc
